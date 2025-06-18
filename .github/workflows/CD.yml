@@ -1,0 +1,32 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install huggingface_hub
+      run: pip install huggingface_hub
+
+    - name: Login and push to Hugging Face
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        huggingface-cli login --token "$HF_TOKEN"
+        git config --global user.email "you@example.com"
+        git config --global user.name "GitHub Actions"
+        git remote add space https://huggingface.co/spaces/NazarBai/mushroom-classifier
+        git push space HEAD:main --force
