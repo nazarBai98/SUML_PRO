@@ -21,12 +21,10 @@ jobs:
     - name: Install huggingface_hub
       run: pip install huggingface_hub
 
-    - name: Login and push to Hugging Face
-      env:
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      run: |
-        huggingface-cli login --token "$HF_TOKEN"
-        git config --global user.email "you@example.com"
-        git config --global user.name "GitHub Actions"
-        git remote add space https://huggingface.co/spaces/NazarBai/mushroom-classifier
-        git push space HEAD:main --force
+    - name: Push to Hugging Face Space
+  run: |
+    git config --global user.email "s25099@pjwstk.edu.pl"
+    git config --global user.name "GitHub Actions"
+    git remote add space https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
+    git push space HEAD:main --force
+
