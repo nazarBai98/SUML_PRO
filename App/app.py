@@ -32,15 +32,24 @@ st.title("Mushroom Classifier")
 file = st.file_uploader("Upload a mushroom image", type=["jpg", "jpeg", "png"])
 
 if file:
-    image = Image.open(file).convert("RGB")
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+    st.write("Image file received!")
+    try:
+        image = Image.open(file).convert("RGB")
+        st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    input_tensor = transform(image).unsqueeze(0).to(device)
-    with torch.no_grad():
-        output = model(input_tensor)
-        probs = F.softmax(output[0], dim=0)
+        st.write("Transforming image...")
+        input_tensor = transform(image).unsqueeze(0).to(device)
 
-    top_probs, top_idxs = probs.topk(3)
-    st.subheader("Top Predictions:")
-    for i in range(3):
-        st.write(f"{class_names[top_idxs[i]]}: {top_probs[i]*100:.2f}%")
+        st.write("Running prediction...")
+        with torch.no_grad():
+            output = model(input_tensor)
+            probs = F.softmax(output[0], dim=0)
+
+        top_probs, top_idxs = probs.topk(3)
+        st.subheader("Top Predictions:")
+        for i in range(3):
+            st.write(f"{class_names[top_idxs[i]]}: {top_probs[i]*100:.2f}%")
+
+    except Exception as e:
+        st.error(f"Error occurred: {e}")
+
