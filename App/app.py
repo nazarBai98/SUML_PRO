@@ -17,7 +17,7 @@ if not os.path.exists(model_path):
     )
 
 model = models.resnet50()
-model.fc = torch.nn.Linear(model.fc.in_features, 10)  # update if using 9 classes
+model.fc = torch.nn.Linear(model.fc.in_features, 10)
 model.load_state_dict(torch.load(model_path, map_location="cpu"))
 model.eval()
 
