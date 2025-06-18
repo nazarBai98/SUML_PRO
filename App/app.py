@@ -3,17 +3,26 @@ import torch
 from torchvision import models, transforms
 from PIL import Image
 import torch.nn.functional as F
+import os
+import urllib.request
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = models.resnet50(weights=None)
-model.fc = torch.nn.Linear(model.fc.in_features, 10)
-model.load_state_dict(torch.load("model.pt", map_location=device))
-model.to(device)
+
+model_path = "model.pt"
+if not os.path.exists(model_path):
+    urllib.request.urlretrieve(
+        "https://huggingface.co/NazarBai/mushroom-resnet50/resolve/main/model.pt",
+        model_path
+    )
+
+model = models.resnet50()
+model.fc = torch.nn.Linear(model.fc.in_features, 10)  # update if using 9 classes
+model.load_state_dict(torch.load(model_path, map_location="cpu"))
 model.eval()
 
 class_names = ['Agaricus', 'Amanita', 'Boletus', 'Cortinarius', 'Entoloma',
-               'Hygrocybe', 'Lactarius', 'Russula', 'Suillus']
+               'Hygrocybe', 'Lactarius', 'Mushrooms', 'Russula', 'Suillus']
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
