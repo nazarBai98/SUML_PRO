@@ -8,17 +8,15 @@ import urllib.request
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+MODEL_URL = "https://huggingface.co/NazarBai/mushroom-resnet50/resolve/main/model.pt"
+MODEL_PATH = "/tmp/model.pt"
 
-model_path = "model.pt"
-if not os.path.exists(model_path):
-    urllib.request.urlretrieve(
-        "https://huggingface.co/NazarBai/mushroom-resnet50/resolve/main/model.pt",
-        model_path
-    )
+if not os.path.exists(MODEL_PATH):
+    urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
 
 model = models.resnet50()
 model.fc = torch.nn.Linear(model.fc.in_features, 10)
-model.load_state_dict(torch.load(model_path, map_location="cpu"))
+model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))  # ✅ use MODEL_PATH
 model.eval()
 
 class_names = ['Agaricus', 'Amanita', 'Boletus', 'Cortinarius', 'Entoloma',
