@@ -22,9 +22,9 @@ jobs:
       run: pip install huggingface_hub
 
     - name: Push to Hugging Face Space
-  run: |
-    git config --global user.email "s25099@pjwstk.edu.pl"
-    git config --global user.name "GitHub Actions"
-    git remote add space https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
-    git push space HEAD:main --force
+      run: |
+        git config --global user.email "s25099@pjwstk.edu.pl"
+        git config --global user.name "GitHub Actions"
+        git remote add space https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
+        git push space HEAD:main --force
 
