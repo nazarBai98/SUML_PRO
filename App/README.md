@@ -1,10 +1,10 @@
 ---
 title: Mushroom Classifier
 emoji: 🍄
-colorFrom: red
+colorFrom: purple
 colorTo: green
-sdk: docker
-sdk_version: 1.0
+sdk: streamlit
+sdk_version: 1.46.0
 app_file: app.py
 pinned: false
 ---

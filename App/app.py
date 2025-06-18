@@ -5,11 +5,13 @@ from PIL import Image
 import torch.nn.functional as F
 import os
 import urllib.request
+import tempfile
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 MODEL_URL = "https://huggingface.co/NazarBai/mushroom-resnet50/resolve/main/model.pt"
-MODEL_PATH = "/tmp/model.pt"
+MODEL_PATH = os.path.join(tempfile.gettempdir(), "model.pt")
 
 if not os.path.exists(MODEL_PATH):
     urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
@@ -32,24 +34,19 @@ st.title("Mushroom Classifier")
 file = st.file_uploader("Upload a mushroom image", type=["jpg", "jpeg", "png"])
 
 if file:
-    st.write("Image file received!")
-    try:
-        image = Image.open(file).convert("RGB")
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+    image = Image.open(file).convert("RGB")
+    st.image(image, caption="Uploaded Image", use_container_width=True)
 
-        st.write("Transforming image...")
-        input_tensor = transform(image).unsqueeze(0).to(device)
+    input_tensor = transform(image).unsqueeze(0).to(device)
 
-        st.write("Running prediction...")
+    with st.spinner("Running prediction..."):
         with torch.no_grad():
             output = model(input_tensor)
             probs = F.softmax(output[0], dim=0)
 
-        top_probs, top_idxs = probs.topk(3)
-        st.subheader("Top Predictions:")
-        for i in range(3):
-            st.write(f"{class_names[top_idxs[i]]}: {top_probs[i]*100:.2f}%")
+    top_probs, top_idxs = probs.topk(3)
+    st.subheader("Top Predictions:")
+    for i in range(3):
+        st.write(f"{class_names[top_idxs[i]]}: {top_probs[i]*100:.2f}%")
 
-    except Exception as e:
-        st.error(f"Error occurred: {e}")
 
