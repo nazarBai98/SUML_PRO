@@ -32,5 +32,6 @@ jobs:
         git remote add origin https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
         git add .
         git commit -m "Deploy Streamlit app"
+        git branch -M main
         git push origin main --force
 
