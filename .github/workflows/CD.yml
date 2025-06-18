@@ -25,6 +25,12 @@ jobs:
       run: |
         git config --global user.email "s25099@pjwstk.edu.pl"
         git config --global user.name "GitHub Actions"
-        git remote add space https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
-        git push space HEAD:main --force
+        cd App
+        git init
+        git config --global user.email "s25099@pjwstk.edu.pl"
+        git config --global user.name "GitHub Actions"
+        git remote add origin https://NazarBai:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/NazarBai/mushroom-classifier
+        git add .
+        git commit -m "Deploy Streamlit app"
+        git push origin main --force
 
